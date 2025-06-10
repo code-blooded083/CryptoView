@@ -74,7 +74,7 @@ export const getCoins = async (page = 1): Promise<Coin[]> => {
       params: {
         vs_currency: 'usd',
         order: 'market_cap_desc',
-        per_page: 20,
+        per_page: 100,
         page,
         sparkline: false
       }

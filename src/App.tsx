@@ -1,11 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Box, Container, useColorMode, Alert, AlertIcon, AlertTitle, AlertDescription, Button } from '@chakra-ui/react'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { Suspense, Component } from 'react'
 import type { ErrorInfo, ReactNode } from 'react'
 import Navbar from './components/Navbar'
 import CoinList from './components/CoinList'
 import CoinDetail from './components/CoinDetail'
+import { FavouritesProvider } from './hooks/useFavourites'
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -86,12 +87,33 @@ function LoadingFallback() {
   )
 }
 
-function App() {
+function AppContent() {
   const { colorMode } = useColorMode()
   const [searchQuery, setSearchQuery] = useState('');
+  const [showFavouritesOnly, setShowFavouritesOnly] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Persist last visited path
+  useEffect(() => {
+    if (location.pathname !== '/') {
+      localStorage.setItem('lastVisitedPath', location.pathname + location.search + location.hash);
+    } else {
+      localStorage.removeItem('lastVisitedPath');
+    }
+  }, [location]);
+
+  // Restore last visited path on initial load
+  useEffect(() => {
+    const lastPath = localStorage.getItem('lastVisitedPath');
+    if (lastPath && location.pathname === '/') {
+      navigate(lastPath, { replace: true });
+    }
+    // eslint-disable-next-line
+  }, []);
 
   return (
-    <Router basename="/CryptoView">
+    <FavouritesProvider>
       <Box 
         minH="100vh" 
         bg={colorMode === 'dark' ? 'gray.800' : 'gray.50'} 
@@ -100,7 +122,7 @@ function App() {
         flexDirection="column"
       >
         <ErrorBoundary>
-          <Navbar onSearch={setSearchQuery} />
+          <Navbar onSearch={setSearchQuery} showFavouritesOnly={showFavouritesOnly} setShowFavouritesOnly={setShowFavouritesOnly} />
           <Container 
             maxW="container.xl" 
             py={8} 
@@ -111,7 +133,7 @@ function App() {
           >
             <Suspense fallback={<LoadingFallback />}>
               <Routes>
-                <Route path="/" element={<CoinList searchQuery={searchQuery} />} />
+                <Route path="/" element={<CoinList searchQuery={searchQuery} showFavouritesOnly={showFavouritesOnly} />} />
                 <Route path="/coin/:id" element={<CoinDetail />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
@@ -119,6 +141,14 @@ function App() {
           </Container>
         </ErrorBoundary>
       </Box>
+    </FavouritesProvider>
+  )
+}
+
+function App() {
+  return (
+    <Router basename="/CryptoView">
+      <AppContent />
     </Router>
   )
 }

@@ -10,15 +10,33 @@ import {
   useColorMode,
   HStack
 } from '@chakra-ui/react'
-import { Search2Icon, MoonIcon, SunIcon } from '@chakra-ui/icons'
-import { Link } from 'react-router-dom'
+import { Search2Icon, MoonIcon, SunIcon, StarIcon } from '@chakra-ui/icons'
+import { useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
 
 interface NavbarProps {
   onSearch?: (query: string) => void;
+  showFavouritesOnly: boolean;
+  setShowFavouritesOnly: (show: boolean) => void;
 }
 
-const Navbar = ({ onSearch }: NavbarProps) => {
+const Navbar = ({ onSearch, showFavouritesOnly, setShowFavouritesOnly }: NavbarProps) => {
   const { colorMode, toggleColorMode } = useColorMode()
+  const navigate = useNavigate()
+
+  // Persist color mode in localStorage
+  useEffect(() => {
+    localStorage.setItem('colorMode', colorMode)
+  }, [colorMode])
+
+  // On mount, set color mode from localStorage if available
+  useEffect(() => {
+    const stored = localStorage.getItem('colorMode')
+    if (stored && stored !== colorMode) {
+      toggleColorMode()
+    }
+    // eslint-disable-next-line
+  }, [])
 
   return (
     <Box 
@@ -39,11 +57,17 @@ const Navbar = ({ onSearch }: NavbarProps) => {
           gap={{ base: 2, md: 0 }}
         >
           <HStack spacing={8} w="100%" justify={{ base: "center", md: "flex-start" }}>
-            <Link to="/">
-              <Heading size="lg" color={colorMode === 'dark' ? 'blue.300' : 'blue.500'}>
-                CryptoView
-              </Heading>
-            </Link>
+            <Heading
+              size="lg"
+              color={colorMode === 'dark' ? 'blue.300' : 'blue.500'}
+              cursor="pointer"
+              onClick={() => {
+                setShowFavouritesOnly(false);
+                navigate('/');
+              }}
+            >
+              CryptoView
+            </Heading>
           </HStack>
           <HStack spacing={4} w="100%" justify={{ base: "center", md: "flex-end" }}>
             <InputGroup
@@ -71,6 +95,15 @@ const Navbar = ({ onSearch }: NavbarProps) => {
               onClick={toggleColorMode}
               variant="ghost"
               colorScheme={colorMode === 'dark' ? 'yellow' : 'blue'}
+            />
+            <IconButton
+              aria-label={showFavouritesOnly ? 'Show All' : 'Show Favourites'}
+              icon={<StarIcon color={showFavouritesOnly ? 'yellow.400' : 'gray.400'} />}
+              onClick={() => {
+                setShowFavouritesOnly(!showFavouritesOnly);
+                navigate('/');
+              }}
+              variant="ghost"
             />
           </HStack>
         </Flex>

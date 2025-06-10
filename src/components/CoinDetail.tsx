@@ -17,10 +17,12 @@ import {
   AlertIcon,
   Center,
   Spinner,
-  useColorMode
+  useColorMode,
+  IconButton
 } from '@chakra-ui/react'
 import { getCoinDetail } from '../services/api'
-import { QuestionOutlineIcon } from '@chakra-ui/icons'
+import { QuestionOutlineIcon, StarIcon } from '@chakra-ui/icons'
+import { useFavourites } from '../hooks/useFavourites'
 
 const CoinDetail = () => {
   const { id } = useParams<{ id: string }>()
@@ -31,6 +33,7 @@ const CoinDetail = () => {
     retry: 3,
     staleTime: 30000
   })
+  const { isFavourite, toggleFavourite } = useFavourites()
 
   if (isError) {
     return (
@@ -91,8 +94,17 @@ const CoinDetail = () => {
               fallback={<QuestionOutlineIcon boxSize="40px" color="gray.400" />}
             />
           </Box>
-          <VStack align="start" spacing={1}>
-            <Text fontSize="2xl" fontWeight="bold">{coin.name}</Text>
+          <VStack align="start" spacing={1} flex={1}>
+            <HStack>
+              <Text fontSize="2xl" fontWeight="bold">{coin.name}</Text>
+              <IconButton
+                aria-label={isFavourite(coin.id) ? 'Unfavourite' : 'Favourite'}
+                icon={<StarIcon color={isFavourite(coin.id) ? 'yellow.400' : 'gray.400'} />}
+                size="sm"
+                variant="ghost"
+                onClick={() => toggleFavourite(coin.id)}
+              />
+            </HStack>
             <Text color={colorMode === 'dark' ? 'gray.400' : 'gray.500'}>{coin.symbol?.toUpperCase?.() || ''}</Text>
             <StatGroup>
               <Stat>

@@ -41,7 +41,7 @@ const Navbar = ({ onSearch }: NavbarProps) => {
           <HStack spacing={8} w="100%" justify={{ base: "center", md: "flex-start" }}>
             <Link to="/">
               <Heading size="lg" color={colorMode === 'dark' ? 'blue.300' : 'blue.500'}>
-                CryptoView
+                CryptoTracker
               </Heading>
             </Link>
           </HStack>

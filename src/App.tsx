@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Box, Container, useColorMode, Alert, AlertIcon, AlertTitle, AlertDescription, Button } from '@chakra-ui/react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import { Suspense, Component } from 'react'
 import type { ErrorInfo, ReactNode } from 'react'
 import Navbar from './components/Navbar'
@@ -91,7 +91,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
 
   return (
-    <Router>
+    <Router basename="/CryptoView">
       <Box 
         minH="100vh" 
         bg={colorMode === 'dark' ? 'gray.800' : 'gray.50'} 
@@ -113,6 +113,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<CoinList searchQuery={searchQuery} />} />
                 <Route path="/coin/:id" element={<CoinDetail />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </Suspense>
           </Container>

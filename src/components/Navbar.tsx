@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   Box,
   Container,
@@ -9,17 +8,10 @@ import {
   Heading,
   IconButton,
   useColorMode,
-  HStack,
-  Text,
-  Badge,
-  StatGroup,
-  Stat,
-  StatArrow
+  HStack
 } from '@chakra-ui/react'
 import { Search2Icon, MoonIcon, SunIcon } from '@chakra-ui/icons'
 import { Link } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import { getCoins } from '../services/api'
 
 interface NavbarProps {
   onSearch?: (query: string) => void;

@@ -18,11 +18,8 @@ const queryClient = new QueryClient({
         return failureCount < 3
       },
       staleTime: 30000, // Consider data stale after 30 seconds
-      cacheTime: 5 * 60 * 1000, // Cache for 5 minutes
-      refetchInterval: 30000, // Refetch every 30 seconds
-      onError: (error) => {
-        console.error('Query error:', error)
-      }
+      gcTime: 5 * 60 * 1000, // Cache for 5 minutes
+      refetchInterval: 30000 // Refetch every 30 seconds
     }
   }
 })
@@ -32,7 +29,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
       <ChakraProvider theme={theme}>
         <ColorModeScript initialColorMode={theme.config.initialColorMode} />
-    <App />
+        <App />
       </ChakraProvider>
     </QueryClientProvider>
   </React.StrictMode>

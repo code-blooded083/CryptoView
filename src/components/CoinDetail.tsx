@@ -1,4 +1,3 @@
-import React from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 import {
@@ -14,7 +13,6 @@ import {
   StatNumber,
   StatArrow,
   StatGroup,
-  Skeleton,
   Alert,
   AlertIcon,
   Center,
@@ -74,8 +72,9 @@ const CoinDetail = () => {
   if (coin.image) {
     if (typeof coin.image === 'string') {
       imageUrl = coin.image;
-    } else if (typeof coin.image === 'object') {
-      imageUrl = coin.image.large || coin.image.small || coin.image.thumb || '';
+    } else if (typeof coin.image === 'object' && coin.image !== null) {
+      const imageObj = coin.image as { large?: string; small?: string; thumb?: string };
+      imageUrl = imageObj.large || imageObj.small || imageObj.thumb || '';
     }
   }
 

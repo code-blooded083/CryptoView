@@ -82,19 +82,23 @@ const CoinCard = ({ coin }: { coin: Coin }) => {
               </Text>
             </VStack>
             
-            <StatGroup>
+            <StatGroup w="100%" display="flex" alignItems="center" justifyContent="space-between">
               <Stat>
                 <StatLabel color={colorMode === 'dark' ? 'gray.400' : 'gray.500'}>Price</StatLabel>
                 <StatNumber fontSize="xl" color={colorMode === 'dark' ? 'white' : 'gray.800'}>
-                  ${coin.current_price.toLocaleString()}
+                  {coin.current_price < 0.01
+                    ? `$${coin.current_price.toLocaleString(undefined, { minimumFractionDigits: 6, maximumFractionDigits: 8 })}`
+                    : `$${coin.current_price.toLocaleString()}`}
                 </StatNumber>
               </Stat>
-              <Stat>
-                <StatLabel color={colorMode === 'dark' ? 'gray.400' : 'gray.500'}>Rank</StatLabel>
-                <StatNumber fontSize="xl" color={colorMode === 'dark' ? 'white' : 'gray.800'}>
-                  #{coin.market_cap_rank}
-                </StatNumber>
-              </Stat>
+              <Box pr={0} pl={0}>
+                <Stat>
+                  <StatLabel color={colorMode === 'dark' ? 'gray.400' : 'gray.500'}>Rank</StatLabel>
+                  <StatNumber fontSize="xl" color={colorMode === 'dark' ? 'white' : 'gray.800'}>
+                    #{coin.market_cap_rank}
+                  </StatNumber>
+                </Stat>
+              </Box>
             </StatGroup>
 
             <Text fontSize="sm" color={colorMode === 'dark' ? 'gray.400' : 'gray.500'}>

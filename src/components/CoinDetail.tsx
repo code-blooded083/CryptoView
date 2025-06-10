@@ -127,7 +127,9 @@ const CoinDetail = () => {
               <Stat>
                 <StatLabel>Current Price</StatLabel>
                 <StatNumber fontSize="2xl">
-                  ${coin.current_price?.toLocaleString()}
+                  {coin.current_price < 0.01
+                    ? `$${coin.current_price.toLocaleString(undefined, { minimumFractionDigits: 6, maximumFractionDigits: 8 })}`
+                    : `$${coin.current_price.toLocaleString()}`}
                 </StatNumber>
               </Stat>
             </StatGroup>
